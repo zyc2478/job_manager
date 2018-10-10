@@ -1,4 +1,4 @@
-package com.zyc.job_manager;
+package com.zyc.jobmanager;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
