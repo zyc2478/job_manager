@@ -46,8 +46,12 @@ public class JobController {
      * @param cronExpression
      * @return
      */
+
+    // 添加任务测试URL：
+    // http://localhost:8080/addJob?jobClassName=com.zyc.jobmanager.job.MyJob&jobGroupName=jobtest&cronExpression=*/10 * * * * ?
+
     @ApiOperation("添加定时任务")//描述方法的作用(Swagger注解)
-    @RequestMapping(value = "/addJob", method = {RequestMethod.POST})
+    @RequestMapping(value = "/addJob", method = {RequestMethod.GET})
     @ResponseBody
     public Map<String, String> addJob(HttpServletRequest request,
                                       @RequestParam(value = "jobClassName") String jobClassName,
@@ -99,8 +103,11 @@ public class JobController {
         return returnData;
     }
 
+    // 暂停任务测试URL：
+    // http://localhost:8080/pauseJob?jobClassName=com.zyc.jobmanager.job.MyJob&jobGroupName=jobtest
+
     @ApiOperation("暂停定时任务")//描述方法的作用(Swagger注解)
-    @RequestMapping(value = "/pauseJob", method = {RequestMethod.POST})
+    @RequestMapping(value = "/pauseJob", method = {RequestMethod.GET})
     @ResponseBody
     public Map<String, String> pauseJob(HttpServletRequest request,
                                         @RequestParam(value = "jobClassName") String jobClassName,
@@ -126,8 +133,10 @@ public class JobController {
         return returnData;
     }
 
+    // 继续任务测试URL：
+    // http://localhost:8080/resumeJob?jobClassName=com.zyc.jobmanager.job.MyJob&jobGroupName=jobtest
     @ApiOperation("继续定时任务")//描述方法的作用(Swagger注解)
-    @RequestMapping(value = "/resumeJob", method = {RequestMethod.POST})
+    @RequestMapping(value = "/resumeJob", method = {RequestMethod.GET})
     @ResponseBody
     public Map<String, String> resumeJob(HttpServletRequest request,
                                          @RequestParam(value = "jobClassName") String jobClassName,
@@ -164,8 +173,11 @@ public class JobController {
      * @param cronExpression
      * @return
      */
+
+    // 更新任务测试URL：
+    // http://localhost:8080/rescheduleJob?jobClassName=com.zyc.jobmanager.job.MyJob&jobGroupName=jobtest&cronExpression=*/5 * * * * ?
     @ApiOperation("更新定时任务")//描述方法的作用(Swagger注解)
-    @RequestMapping(value = "/rescheduleJob", method = {RequestMethod.POST})
+    @RequestMapping(value = "/rescheduleJob", method = {RequestMethod.GET})
     @ResponseBody
     public Map<String, String> rescheduleJob(HttpServletRequest request,
                                              @RequestParam(value = "jobClassName") String jobClassName,
@@ -203,9 +215,10 @@ public class JobController {
         return returnData;
     }
 
-
+    // 删除任务测试URL：
+    // http://localhost:8080/removeJob?jobClassName=com.zyc.jobmanager.job.MyJob&jobGroupName=jobtest
     @ApiOperation("删除定时任务")//描述方法的作用(Swagger注解)
-    @RequestMapping(value = "/removeJob", method = {RequestMethod.POST})
+    @RequestMapping(value = "/removeJob", method = {RequestMethod.GET})
     @ResponseBody
     public Map<String, String> removeJob(HttpServletRequest request,
                                          @RequestParam(value = "jobClassName") String jobClassName,
