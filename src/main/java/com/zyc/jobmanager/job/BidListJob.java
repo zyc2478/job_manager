@@ -3,24 +3,17 @@ package com.zyc.jobmanager.job;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.zyc.jobmanager.api.PPDApiService;
-import com.zyc.jobmanager.config.Properties;
+import com.zyc.jobmanager.config.MyProps;
 import com.zyc.jobmanager.entity.BidList;
 import com.zyc.jobmanager.entity.JobLog;
 import com.zyc.jobmanager.service.BidListService;
 import com.zyc.jobmanager.service.JobLogService;
-import com.zyc.jobmanager.util.DateUtil;
-import com.zyc.jobmanager.util.InitUtil;
-import com.zyc.jobmanager.util.JSONUtil;
-import com.zyc.jobmanager.util.RedisUtil;
+import com.zyc.jobmanager.util.*;
 import org.quartz.Job;
 import org.quartz.JobDataMap;
 import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.stereotype.Component;
 import redis.clients.jedis.Jedis;
 
 import java.io.Serializable;
@@ -38,23 +31,11 @@ public class BidListJob implements Job, Serializable{
     // 该类必须为public修饰
     // 该类必须含有空参数的构造器
 
-    @Value("${bbd_ds.init.mode}")
-    private String initMode;
+    MyProps props = ConfigUtil.getProps();
 
-    @Value("${bbd_ds.init.begin}")
-    private String initBegin;
+    RedisUtil redisUtil = new RedisUtil();
 
-    @Value("${bbd_ds.init.end}")
-    private String initEnd;
-
-    @Autowired
-    Properties properties;
-/*
-    @Value("${redis.host}")
-    private String redisHost;
-
-    @Value("${redis.port}")
-    private int redisPort;*/
+    TokenUtil tokenUtil = new TokenUtil();
 
     private static final long serialVersionUID = 1L;
 
@@ -66,7 +47,13 @@ public class BidListJob implements Job, Serializable{
 
     private static Logger logger = Logger.getLogger("BidListJob.class");
 
-    private static String token = "";
+    private int initMode = props.getInit_mode();
+
+    private String initBegin = props.getInit_begin();
+
+    private String initEnd = props.getInit_end();
+
+    private String token = tokenUtil.getToken();
 
 
 
@@ -82,18 +69,16 @@ public class BidListJob implements Job, Serializable{
         System.out.println("initBegin:" + initBegin);
 /*        System.out.println("redisHost in BidListJob: " + redisHost);
         System.out.println("redisPort in BidListJob: " + redisPort);*/
-        System.out.println("redisHost in BidListJob: " + properties.getRedisHost());
-        System.out.println("redisPort in BidListJob: " + properties.getRedisPort());
 
         //System.out.println("The result is: " + bidListService.getBidListByListingId(62068730));
-        if( initMode.equals("1")){
+        if( initMode==1){
             try {
                 fetchSomeDays(initBegin,initEnd);
                 //bidListService.getBidListByListingId(62068730);
             } catch (Exception e) {
                 e.printStackTrace();
             }
-        } else if( initMode.equals("0")){
+        } else if( initMode==0 ){
             try {
                 fetchDaysUntilNow();
             } catch (Exception e) {
@@ -114,8 +99,8 @@ public class BidListJob implements Job, Serializable{
 
     public void init() {
         try {
-            InitUtil.init();
-            token = InitUtil.getToken();
+            tokenUtil.init();
+            token = tokenUtil.getToken();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -125,7 +110,6 @@ public class BidListJob implements Job, Serializable{
     public void fetchBidList(String startDate,String endDate) throws Exception {
 
         //RedisUtil redisUtil = new RedisUtil(redisHost,redisPort);
-        RedisUtil redisUtil = new RedisUtil(properties.getRedisHost(),properties.getRedisPort());
         Jedis jedis = redisUtil.getJedis();
         init();
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
@@ -186,7 +170,6 @@ public class BidListJob implements Job, Serializable{
     //@Test
     public void fetchDaysUntilNow() throws Exception {
         //RedisUtil redisUtil = new RedisUtil(redisHost,redisPort);
-        RedisUtil redisUtil = new RedisUtil(properties.getRedisHost(),properties.getRedisPort());
         Jedis jedis = redisUtil.getJedis();
 
         String saveDate = jedis.get("job_bid_list");

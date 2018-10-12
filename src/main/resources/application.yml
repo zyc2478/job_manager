@@ -1,5 +1,5 @@
 server:
-  context-path: /quartz
+  #context-path: /quartz
   port: 8080
   ession-timeout: 60
 #server.address=192.168.1.66
@@ -32,21 +32,16 @@ mybatis:
   type-aliases-package: com.zyc.jobmanager.entity
   mapper-locations: classpath:mapper/*.xml
 
-redis:
-  host: 59.110.169.156
-  port: 6379
+myprops:
+  init_mode: 1
+  init_begin: 2018-09-01
+  init_end: 2018-09-30
+  open-id: 7344c77f9a7f4f249bd9df04115171e6
+  token:
+  refresh_token:
+  token_init: 6fb59584-a8c4-4218-9b5e-5e88edb46575
+  expire_days: 2
+  token_init_date: 2018-01-16 23:47
+  redis_host: 59.110.169.156
+  redis_port: 6379
 
-bbd_ds:
-  init:
-    mode: 1
-    begin: 2018-09-01
-    end: 2018-09-30
-
-bbd:
-  init:
-    open_id: 7344c77f9a7f4f249bd9df04115171e6
-    token:
-    refresh_token:
-    token_init: 6fb59584-a8c4-4218-9b5e-5e88edb46575
-    expire_days: 2
-    init_date: 2018-01-16 23\:47
